@@ -131,7 +131,8 @@ function Calculator(props) {
 			{
 				method:'POST',
 				headers: {
-				'content-type': 'application/json',	
+					'content-type': 'application/json',	
+					'x-access-token' : props.token
 				},
 				body: JSON.stringify({"firstOperand":preResultValue,"secondOperand":resultValue})
 			})
@@ -140,6 +141,7 @@ function Calculator(props) {
 				console.log(data); 
 				setCurrentOperation('');
 				setPreResultValue('');
+				props.updateBalance(String(data.balance));
 				setResultValue(String(data.value));
 			}).catch(error => {
                 console.log(error);
@@ -181,21 +183,49 @@ function Calculator(props) {
   );
 }
 
-function tryLogin(username,password) {
-	alert(username + password)
-}
+
   
 function App() {
+	const [userToken, setUserToken] = useState('');
+	const [userCredits, setUserCredits] = useState(0);
+	
+	function updateBalance(newBalance){
+		setUserCredits(newBalance);
+	}
+	
+	function tryLogin(username,password) {
+		try {
+			fetch('http://localhost:8099/auth/v2/login/',
+			{
+				method:'POST',
+				headers: {
+					'content-type': 'application/json',	
+				},
+				body: JSON.stringify({"username":username,"password":password})
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log(data); 
+				setUserToken(data.token);
+				setUserCredits(data.balance);
+			}).catch(error => {
+				console.log(error);
+			})
+		} catch (e){
+			console.log(e);
+		}
+	}
+
 
   return (
     <div className="App">
-      <Sidenav/>
+      <Sidenav credits={userCredits}/>
       <main>
         <Routes>
           <Route path="/" element={<LogIn tryLogin={tryLogin}/>}/>
-          <Route path="/calculator" element={<Calculator />} />
-		  <Route path="/history" element={<History />} />
-		  <Route path="/login" element={<LogIn tryLogin={tryLogin}/>} />
+          <Route path="/calculator" element={<Calculator token={userToken} updateBalance={updateBalance}/>} />
+		  <Route path="/history" element={<History token={userToken} />} />
+		  <Route path="/login" element={<LogIn tryLogin={tryLogin}/>}  />
         </Routes>
       </main>		
     </div>

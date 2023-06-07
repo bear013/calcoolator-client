@@ -1,5 +1,21 @@
+function SearchBar() {
+  return (
+	<div> Search Bar </div>
+  )
+}
+
+function ResultsBox() {
+  return (
+	<div> Results Box </div>
+  )
+}
+
+
 export default function History() {
   return (
-    <div>History</div>
+    <div className="historypage">
+	<SearchBar />
+	<ResultsBox />
+	</div>
   )
 }
