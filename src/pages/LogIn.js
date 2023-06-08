@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 export default function LogIn(props) {
 	const [username, setUsername] = useState('');
@@ -14,9 +17,12 @@ export default function LogIn(props) {
 	
   return (
     <div className="login">
-		<p><label for="username">Username</label><input name="username" id="username" type="text" onChange={usernameChange} /></p>
-		<p><label for="password">Password</label><input name="password" id="password" type="password" onChange={passwordChange} /></p>
-		<button onClick={() => {props.tryLogin(username,password)} }>Log In</button>
+		<Typography component="h1" variant="h5">
+			Sign in
+		</Typography>
+		<p><TextField name="username" label="User Name" id="username" type="text" onChange={usernameChange} /></p>
+		<p><TextField name="password" label="Password" id="password" type="password" onChange={passwordChange} /></p>
+		<Button variant="contained" onClick={() => {props.tryLogin(username,password)} }>Log In</Button>
 	</div>
   )
 }

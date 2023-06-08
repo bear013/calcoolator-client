@@ -1,0 +1,88 @@
+
+
+.numberbuttons {
+	display: flex;
+	flex-direction: column;
+	
+}
+
+.numberbuttonrow {
+  	display: flex;
+	flex-direction: row;
+}
+
+.calculator {
+	
+  text-align: center;
+
+  font-size: calc(10px + 2vmin);
+	
+  display: flex;
+  flex-direction: column;
+}
+
+.operations {
+  display: flex;
+  flex-direction: column;
+}
+
+.calculatorcontrols {
+	display: flex;
+	flex-direction: row;
+}
+
+.preresultbox {
+  background-color: lightgray;
+  color: black;
+  margin: -1px;
+  height: 50px;
+  border:solid;
+  border-width:1px;
+  border-color:gray;
+  font-family: 'Roboto';
+  line-height:50px;
+}
+
+.currentoperation {
+  background-color: lightgray;
+  color: black;
+  margin: -1px;
+  height: 50px;
+  font-family: 'Roboto';
+  line-height:50px;
+}
+
+.resultbox {
+  background-color: lightgray;
+  color: black;
+  margin: -1px;
+  height: 50px;
+  border:solid;
+  border-width:1px;
+  border-color:gray;
+  font-family: 'Roboto';
+  line-height:50px;
+  display: flex;
+  flex-direction: row;
+  width:192px;
+}
+
+.numberbutton {
+}
+
+
+
+.spacer {
+	width: 100%;
+}
+
+
+.appNameLogo {
+	margin-left:5px;
+	
+}
+
+.searchbar{
+	
+	
+}
