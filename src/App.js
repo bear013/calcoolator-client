@@ -127,7 +127,7 @@ function Calculator(props) {
 		if (preResultValue != '' && currentOperation != '' && resultValue != '') {
 		try {
 			console.log(currentOperation)
-			fetch('http://localhost:8099/calculator/operations/' + currentOperation,
+			fetch('http://localhost:8099/calculator/v1/operations/' + currentOperation,
 			{
 				method:'POST',
 				headers: {
@@ -161,7 +161,7 @@ function Calculator(props) {
 				setResultValue(resultValue + value);
 			}
 		}
-		if (value == 'addition' || value == 'subtraction' || value == 'multiplication' || value == 'division' || value == 'squareroot'){
+		if (value == 'addition' || value == 'subtraction' || value == 'multiplication' || value == 'division' || value == 'square_root'){
 			handleEqual();
 			if (preResultValue == '' && resultValue != '' ) {
 				setPreResultValue(resultValue);

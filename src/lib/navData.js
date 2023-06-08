@@ -2,7 +2,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import HistoryIcon from '@mui/icons-material/History';
 import LogoutIcon from '@mui/icons-material/Logout';
-import CreditsCounter from '../components/CreditsCounter';
  
 export const navData = [
     {
