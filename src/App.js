@@ -33,7 +33,6 @@ function App() {
 			})
 			.then(response => response.json())
 			.then(data => {
-				console.log(data); 
 				setUserToken(data.token);
 				setUserCredits(data.balance);
 			}).catch(error => {

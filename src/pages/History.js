@@ -50,19 +50,8 @@ function SearchBar(props) {
   )
 }
 
-function HistoryFooter(props) {
-	
-	// 10 pages, page 3:  1 2 3 4 5 ... 10
-	// 5 pages, page 3: 1 2 3 4 5
-	// 1 pages, page 1: 1
-	// 
-	
+function HistoryFooter(props) {	
 	var pages = Array.from(Array(props.totalPages).keys());
-	
-	//console.log(pages)
-	//console.log(props.totalPages)
-	//console.log(props.currentPage)
-
 	return (
 	<div>
 		{pages.map(item =>{ return <Button variant="text" onClick={() => props.selectPage(item)}>{item + 1}</Button> })}
@@ -71,10 +60,7 @@ function HistoryFooter(props) {
 
 }
 
-function ResultsData(props) {
-	
-	console.log(props.searchResults)
-	
+function ResultsData(props) {	
   return (
 	<div> 
 	<table> 
@@ -99,12 +85,7 @@ export default function History(props) {
 	const [pageOffset, setPageOffset] = useState(0);
 	const [searchResults, setSearchResults] = useState();
 	
-	//useEffect(() => {
-	//	trySearch();
-	//}, [pageOffset]);
-	
 	function selectPage(page) {
-		console.log('set page offset')
 		setPageOffset(page);
 	};
 	
@@ -153,7 +134,6 @@ export default function History(props) {
 			})
             .then(response => response.json())
             .then(data => {
-				//console.log(data);
 				if (data.resultCode == 0){
 					setSearchResults(data);
 				}
@@ -172,7 +152,6 @@ export default function History(props) {
 	}
 	
 	function tryDeleteRecord(operationId) {
-		//console.log(operationId)
 		try {
 			fetch(`http://localhost:8099/calculator/v1/deleteRecord`,
 			{
@@ -185,7 +164,6 @@ export default function History(props) {
 			})
             .then(response => response.json())
             .then(data => {
-				//console.log(data.data);
 				//this is not ideal, the filter states could change between executions
 				trySearch(); 
 			})
