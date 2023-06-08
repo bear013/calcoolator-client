@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import Button from '@mui/material/Button';
 
 function TypeFilter(props) {
   return (
@@ -34,7 +35,7 @@ function AmountFilter(props) {
 
 function SearchButton(props) {
   return (
-	<div> <button onClick={props.searchFunction} > S </button></div>
+	<div> <Button onClick={() => props.searchFunction(0)} variant="contained" > S </Button></div>
   )
 }
 
@@ -49,28 +50,44 @@ function SearchBar(props) {
   )
 }
 
+function HistoryFooter(props) {
+	
+	// 10 pages, page 3:  1 2 3 4 5 ... 10
+	// 5 pages, page 3: 1 2 3 4 5
+	// 1 pages, page 1: 1
+	// 
+	
+	var pages = Array.from(Array(props.totalPages).keys());
+	
+	//console.log(pages)
+	//console.log(props.totalPages)
+	//console.log(props.currentPage)
+
+	return (
+	<div>
+		{pages.map(item =>{ return <Button variant="text" onClick={() => props.selectPage(item)}>{item + 1}</Button> })}
+	</div>
+	)
+
+}
 
 function ResultsData(props) {
+	
+	console.log(props.searchResults)
+	
   return (
 	<div> 
 	<table> 
-	{props.searchResults !== undefined? <tr> <th>Type</th> <th> Amount </th> <th> Balance </th> <th> Response </th> <th> Date </th> </tr> : <tr></tr> }
+	{props.searchResults !== undefined? <tr> <th>Type</th> <th> Amount </th> <th> Balance </th> <th> Response </th> <th> Date </th>  <th></th> </tr> : <tr></tr> }
 	{props.searchResults !== undefined && props.searchResults.data.rows.map(item =>{
-       return <tr> <td> {item.type} </td> <td> {item.amount} </td> <td> {item.balance} </td> <td> {item.response} </td> <td> {item.op_date} </td> </tr> 
+       return <tr> <td> {item.type} </td> <td> {item.amount} </td> <td> {item.balance} </td> <td> {item.response} </td> <td> {item.op_date} </td> <td><Button onClick={() => props.tryDeleteRecord(item.record_id)}>X</Button></td>  </tr> 
     })}
 	</table>
-	<div className="historyfooter"></div>
+	{props.searchResults !== undefined && props.searchResults.resultCode == 0? <HistoryFooter currentIndex={props.searchResults.data.currentPage} itemCount={props.searchResults.data.count} totalPages={props.searchResults.data.totalPages} selectPage={props.selectPage} /> : <div></div> }
+	
 	</div>
   )
 }
-
-//op.type as type,
-//h.amount as amount,
-//h.user_balance as balance,
-//h.operation_response as response,
-//h.operation_date as op_date
-
-
 
 export default function History(props) {
 	
@@ -81,6 +98,15 @@ export default function History(props) {
 	const [typeFilter, setTypeFilter] = useState('any');
 	const [pageOffset, setPageOffset] = useState(0);
 	const [searchResults, setSearchResults] = useState();
+	
+	//useEffect(() => {
+	//	trySearch();
+	//}, [pageOffset]);
+	
+	function selectPage(page) {
+		console.log('set page offset')
+		setPageOffset(page);
+	};
 	
 	const minAmountFilterChange = (e) => {
 		setMinAmountFilter(e.target.value);
@@ -108,7 +134,7 @@ export default function History(props) {
 						'untilDateFilterChange':untilDateFilterChange,
 						'typeFilterChange':typeFilterChange}
 	
-	function trySearch() {
+	function trySearch(page) {
 		try {
 			fetch(`http://localhost:8099/calculator/v1/history?`  + new URLSearchParams({
 				minAmount: minAmountFilter,
@@ -116,7 +142,7 @@ export default function History(props) {
 				fromDate: fromDateFilter,
 				untilDate: untilDateFilter,
 				type:typeFilter,
-				offset:pageOffset
+				offset:page
 			}),
 			{
 				method:'GET',
@@ -127,8 +153,41 @@ export default function History(props) {
 			})
             .then(response => response.json())
             .then(data => {
-				{console.log(data.data);
-				setSearchResults(data)};
+				//console.log(data);
+				if (data.resultCode == 0){
+					setSearchResults(data);
+				}
+				if (data.resultCode == -2){
+					alert('You must sign in to continue');
+				}
+			})
+			
+			.catch(error => {
+                console.log(error);
+				setSearchResults('');
+            })
+		} catch (e){
+			console.log(e);
+		}		
+	}
+	
+	function tryDeleteRecord(operationId) {
+		//console.log(operationId)
+		try {
+			fetch(`http://localhost:8099/calculator/v1/deleteRecord`,
+			{
+				method:'DELETE',
+				headers: {
+					'content-type': 'application/json',	
+					'x-access-token' : props.token
+				},
+				body: JSON.stringify({"recordId":operationId})
+			})
+            .then(response => response.json())
+            .then(data => {
+				//console.log(data.data);
+				//this is not ideal, the filter states could change between executions
+				trySearch(); 
 			})
 			
 			.catch(error => {
@@ -136,14 +195,13 @@ export default function History(props) {
             })
 		} catch (e){
 			console.log(e);
-		}
-		
+		}		
 	}
 	
   return (
     <div className="historypage">
 	<SearchBar token={props.userToken} events={filterEvents} searchFunction={trySearch} />
-	<ResultsData searchResults={searchResults}/>
+	<ResultsData searchResults={searchResults} tryDeleteRecord={tryDeleteRecord} selectPage={trySearch}/>
 	</div>
   )
 }

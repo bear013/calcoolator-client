@@ -7,7 +7,7 @@ export const navData = [
     {
         id: 0,
         icon: <AccountCircleIcon/>,
-        text: "Log In",
+        text: "Sign In",
         link: "/"
     },
     {
