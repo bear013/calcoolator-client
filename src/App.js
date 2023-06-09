@@ -13,13 +13,10 @@ import {
 } from "react-router-dom";
 import Sidenav from './components/Sidenav';
 
-
 const WebserviceProtocol = config.WebserviceProtocol
 const WebserviceHost = config.WebserviceHost
 const WebservicePort = config.WebservicePort
 
-
-  
 function App() {
 	const [userToken, setUserToken] = useState('');
 	const [userCredits, setUserCredits] = useState(0);
@@ -39,7 +36,8 @@ function App() {
 				body: JSON.stringify({"username":username,"password":password})
 			})
 			.then(response => response.json())
-			.then(data => {
+			.then(resp => {
+				var data = resp.data
 				setUserToken(data.token);
 				setUserCredits(data.balance);
 				alert(`Welcome,${username}!`);
