@@ -1,34 +1,43 @@
 import { useState,useEffect } from 'react';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 
 function TypeFilter(props) {
   return (
-	<div> 
-	<select onChange={props.filterEvents.typeFilterChange}> 
-		<option value="any">Any Operation</option> 
-		<option value="addition">Addition</option> 
-		<option value="subtraction">Subtraction</option> 
-		<option value="multiplication">Multiplication</option>
-		<option value="division">Division</option>
-		<option value="square_root">Square Root</option>
-		<option value="random_string">Random String</option>
-	</select>
-	</div>
+    <div>
+	 
+    <Select  
+	labelId="typeLabel"
+    id="type"
+	label="Type"
+	value={props.typeFilter}
+    onChange={props.filterEvents.typeFilterChange}> 
+		<MenuItem value="any" >Any Operation</MenuItem> 
+		<MenuItem value="addition">Addition</MenuItem> 
+		<MenuItem value="subtraction">Subtraction</MenuItem> 
+		<MenuItem value="multiplication">Multiplication</MenuItem>
+		<MenuItem value="division">Division</MenuItem>
+		<MenuItem value="square_root">Square Root</MenuItem>
+		<MenuItem value="random_string">Random String</MenuItem>
+	</Select>
+    </div>
   )
 }
 
 function DateFilter(props) {
   return (
 	<div> 
-	From: <input type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.fromDateFilterChange} /> 
-	Until: <input type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.untilDateFilterChange} /> 
+	<TextField label="Start Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.fromDateFilterChange} /> 
+	<TextField label="End Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.untilDateFilterChange} /> 
 	</div>
   )
 }
 
 function AmountFilter(props) {
   return (
-	<div> Between:<input type="text" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} /> And: <input type="text" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
+	<div><TextField type="text" label="Min Amount" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} /> <TextField type="text" label="Min Amount" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
   )
 }
 
@@ -42,7 +51,7 @@ function SearchButton(props) {
 function SearchBar(props) {
   return (
 	<div className="searchbar"> 
-		<TypeFilter filterEvents={props.events} /> 
+		<TypeFilter filterEvents={props.events} typeFilter={props.typeFilter} /> 
 		<DateFilter filterEvents={props.events} /> 
 		<AmountFilter filterEvents={props.events}/> 
 		<SearchButton searchFunction={props.searchFunction}/> 
@@ -178,7 +187,7 @@ export default function History(props) {
 	
   return (
     <div className="historypage">
-	<SearchBar token={props.userToken} events={filterEvents} searchFunction={trySearch} />
+	<SearchBar token={props.userToken} events={filterEvents} searchFunction={trySearch} typeFilter={typeFilter}/>
 	<ResultsData searchResults={searchResults} tryDeleteRecord={tryDeleteRecord} selectPage={trySearch}/>
 	</div>
   )
