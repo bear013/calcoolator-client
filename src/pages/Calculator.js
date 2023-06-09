@@ -1,9 +1,14 @@
+import config from '../config/config'
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import styles from './calculator.module.css' ;
 import BackspaceIcon from '@mui/icons-material/Backspace';
+
+const WebserviceProtocol = config.WebserviceProtocol
+const WebserviceHost = config.WebserviceHost
+const WebservicePort = config.WebservicePort
 
 function NumberButton(props) {	
   return (
@@ -127,7 +132,7 @@ export default function Calculator(props) {
 		if (preResultValue != '' && currentOp != '' && resultValue != '' || (currentOp in instantOpArray) || (currentOp in oneOperandOpArray && preResultValue != '')  ) {
 		try {
 			console.log(currentOp)
-			fetch('http://localhost:8099/calculator/v1/operations/' + currentOp,
+			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/calculator/v1/operations/` + currentOp,
 			{
 				method:'POST',
 				headers: {

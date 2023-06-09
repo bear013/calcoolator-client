@@ -1,10 +1,10 @@
+import config from './config/config'
 import React from "react";
 import { useState } from 'react';
 import './App.css';
 import Calculator from './pages/Calculator'
 import History from "./pages/History";
 import LogIn from "./pages/LogIn";
-
 import {
   BrowserRouter,
   Routes,
@@ -12,6 +12,13 @@ import {
   useNavigate
 } from "react-router-dom";
 import Sidenav from './components/Sidenav';
+
+
+const WebserviceProtocol = config.WebserviceProtocol
+const WebserviceHost = config.WebserviceHost
+const WebservicePort = config.WebservicePort
+
+
   
 function App() {
 	const [userToken, setUserToken] = useState('');
@@ -23,7 +30,7 @@ function App() {
 	
 	function tryLogin(username,password) {
 		try {
-			fetch('http://localhost:8099/auth/v2/login/',
+			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/auth/v2/login/`,
 			{
 				method:'POST',
 				headers: {
@@ -35,6 +42,7 @@ function App() {
 			.then(data => {
 				setUserToken(data.token);
 				setUserCredits(data.balance);
+				alert(`Welcome,${username}!`);
 			}).catch(error => {
 				console.log(error);
 			})

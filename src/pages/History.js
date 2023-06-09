@@ -1,3 +1,4 @@
+import config from '../config/config'
 import { useState,useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
@@ -13,6 +14,10 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Search from '@mui/icons-material/Search';
 import Delete from '@mui/icons-material/Delete';
+
+const WebserviceProtocol = config.WebserviceProtocol
+const WebserviceHost = config.WebserviceHost
+const WebservicePort = config.WebservicePort
 
 function TypeFilter(props) {
   return (
@@ -54,7 +59,7 @@ function AmountFilter(props) {
 
 function SearchButton(props) {
   return (
-	<div> <Button minHeight="64px" onClick={() => props.searchFunction(0)} variant="contained" > <Search/> </Button></div>
+	<div> <Button minheight="64px" onClick={() => props.searchFunction(0)} variant="contained" > <Search/> </Button></div>
   )
 }
 
@@ -77,7 +82,7 @@ function HistoryFooter(props) {
 	var pages = Array.from(Array(props.totalPages).keys());
 	return (
 	<div>
-		{pages.map(item =>{ return <Button variant="text" onClick={() => props.selectPage(item)}>{item + 1}</Button> })}
+		{pages.map(item =>{ return <Button variant="text" key={item} onClick={() => props.selectPage(item)}>{item + 1}</Button> })}
 	</div>
 	)
 
@@ -86,7 +91,7 @@ function HistoryFooter(props) {
 function ResultsData(props) {	
   return (
 	<TableContainer component={Paper}>
-		<Table aria-label="simple table"> 
+		<Table> 
 			{props.searchResults !== undefined? 
 				<TableHead>
 					<TableRow>
@@ -100,7 +105,7 @@ function ResultsData(props) {
 				</TableHead>:<TableHead></TableHead>}
 			<TableBody>
 				{props.searchResults !== undefined && props.searchResults.data.rows.map(item =>{
-				   return <TableRow> <TableCell> {item.type} </TableCell> <TableCell> {item.amount} </TableCell> <TableCell> {item.balance} </TableCell> <TableCell> {item.response} </TableCell> <TableCell> {item.op_date} </TableCell> <TableCell><Button onClick={() => props.tryDeleteRecord(item.record_id)}><Delete/></Button></TableCell>  </TableRow> 
+				   return <TableRow key={item}> <TableCell> {item.type} </TableCell> <TableCell> {item.amount} </TableCell> <TableCell> {item.balance} </TableCell> <TableCell> {item.response} </TableCell> <TableCell> {item.op_date} </TableCell> <TableCell><Button onClick={() => props.tryDeleteRecord(item.record_id)}><Delete/></Button></TableCell>  </TableRow> 
 				})}
 			</TableBody>
 		</Table>
@@ -152,7 +157,7 @@ export default function History(props) {
 	
 	function trySearch(page) {
 		try {
-			fetch(`http://localhost:8099/calculator/v1/history?`  + new URLSearchParams({
+			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/calculator/v1/history?`  + new URLSearchParams({
 				minAmount: minAmountFilter,
 				maxAmount: maxAmountFilter,
 				fromDate: fromDateFilter,
@@ -188,7 +193,7 @@ export default function History(props) {
 	
 	function tryDeleteRecord(operationId) {
 		try {
-			fetch(`http://localhost:8099/calculator/v1/deleteRecord`,
+			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/calculator/v1/deleteRecord`,
 			{
 				method:'DELETE',
 				headers: {
