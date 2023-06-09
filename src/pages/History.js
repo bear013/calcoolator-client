@@ -1,8 +1,18 @@
 import { useState,useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Search from '@mui/icons-material/Search';
+import Delete from '@mui/icons-material/Delete';
 
 function TypeFilter(props) {
   return (
@@ -37,24 +47,28 @@ function DateFilter(props) {
 
 function AmountFilter(props) {
   return (
-	<div><TextField type="text" label="Min Amount" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} /> <TextField type="text" label="Min Amount" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
+	<div><TextField type="text" label="Min Amount" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} /><TextField type="text" label="Min Amount" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
   )
 }
 
 
 function SearchButton(props) {
   return (
-	<div> <Button onClick={() => props.searchFunction(0)} variant="contained" > S </Button></div>
+	<div> <Button minHeight="64px" onClick={() => props.searchFunction(0)} variant="contained" > <Search/> </Button></div>
   )
 }
 
 function SearchBar(props) {
   return (
 	<div className="searchbar"> 
-		<TypeFilter filterEvents={props.events} typeFilter={props.typeFilter} /> 
+	<Grid container spacing={0} xs={12} > 
+		<TypeFilter filterEvents={props.events} typeFilter={props.typeFilter} /><SearchButton searchFunction={props.searchFunction}/> 
+
+	</Grid>
+	<Grid container spacing={0} xs={12} > 
 		<DateFilter filterEvents={props.events} /> 
-		<AmountFilter filterEvents={props.events}/> 
-		<SearchButton searchFunction={props.searchFunction}/> 
+		<AmountFilter filterEvents={props.events}/> 	
+	</Grid>
 	</div>
   )
 }
@@ -71,16 +85,28 @@ function HistoryFooter(props) {
 
 function ResultsData(props) {	
   return (
-	<div> 
-	<table> 
-	{props.searchResults !== undefined? <tr> <th>Type</th> <th> Amount </th> <th> Balance </th> <th> Response </th> <th> Date </th>  <th></th> </tr> : <tr></tr> }
-	{props.searchResults !== undefined && props.searchResults.data.rows.map(item =>{
-       return <tr> <td> {item.type} </td> <td> {item.amount} </td> <td> {item.balance} </td> <td> {item.response} </td> <td> {item.op_date} </td> <td><Button onClick={() => props.tryDeleteRecord(item.record_id)}>X</Button></td>  </tr> 
-    })}
-	</table>
-	{props.searchResults !== undefined && props.searchResults.resultCode == 0? <HistoryFooter currentIndex={props.searchResults.data.currentPage} itemCount={props.searchResults.data.count} totalPages={props.searchResults.data.totalPages} selectPage={props.selectPage} /> : <div></div> }
-	
-	</div>
+	<TableContainer component={Paper}>
+		<Table aria-label="simple table"> 
+			{props.searchResults !== undefined? 
+				<TableHead>
+					<TableRow>
+						<TableCell>Type</TableCell>
+						<TableCell>Amount</TableCell> 
+						<TableCell>Balance</TableCell> 
+						<TableCell>Response</TableCell> 
+						<TableCell>Date</TableCell>  
+						<TableCell></TableCell> 
+					</TableRow> 
+				</TableHead>:<TableHead></TableHead>}
+			<TableBody>
+				{props.searchResults !== undefined && props.searchResults.data.rows.map(item =>{
+				   return <TableRow> <TableCell> {item.type} </TableCell> <TableCell> {item.amount} </TableCell> <TableCell> {item.balance} </TableCell> <TableCell> {item.response} </TableCell> <TableCell> {item.op_date} </TableCell> <TableCell><Button onClick={() => props.tryDeleteRecord(item.record_id)}><Delete/></Button></TableCell>  </TableRow> 
+				})}
+			</TableBody>
+		</Table>
+		{props.searchResults !== undefined && props.searchResults.resultCode == 0? <HistoryFooter currentIndex={props.searchResults.data.currentPage} itemCount={props.searchResults.data.count} totalPages={props.searchResults.data.totalPages} selectPage={props.selectPage} /> : <div></div> }
+		
+	</TableContainer>
   )
 }
 
