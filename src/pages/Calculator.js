@@ -132,7 +132,7 @@ export default function Calculator(props) {
 		if (preResultValue != '' && currentOp != '' && resultValue != '' || (currentOp in instantOpArray) || (currentOp in oneOperandOpArray && preResultValue != '')  ) {
 		try {
 			console.log(currentOp)
-			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/calculator/v1/operations/` + currentOp,
+			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/calculator/v2/operations/` + currentOp,
 			{
 				method:'POST',
 				headers: {
@@ -142,8 +142,9 @@ export default function Calculator(props) {
 				body: JSON.stringify({"firstOperand":preResultValue,"secondOperand":resultValue})
 			})
             .then(response => response.json())
-            .then(data => {
-				console.log(data); 
+            .then(resp => {
+				console.log(resp); 
+				var data = resp.data;
 				setCurrentOperation('');
 				setPreResultValue('');
 				props.updateBalance(String(data.balance));
