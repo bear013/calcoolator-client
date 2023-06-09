@@ -26,29 +26,30 @@ function App() {
 	}
 	
 	function tryLogin(username,password) {
-		try {
-			fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/auth/v2/login/`,
-			{
-				method:'POST',
-				headers: {
-					'content-type': 'application/json',	
-				},
-				body: JSON.stringify({"username":username,"password":password})
-			})
-			.then(response => response.json())
-			.then(resp => {
+		fetch(`${WebserviceProtocol}://${WebserviceHost}:${WebservicePort}/auth/v2/login/`,
+		{
+			method:'POST',
+			headers: {
+				'content-type': 'application/json',	
+			},
+			body: JSON.stringify({"username":username,"password":password})
+		})
+		.then(response => response.json())
+		.then(resp => {
+			console.log(resp)
+			if (resp.resultCode == 0) {
 				var data = resp.data
 				setUserToken(data.token);
 				setUserCredits(data.balance);
 				alert(`Welcome,${username}!`);
-			}).catch(error => {
-				console.log(error);
-			})
-		} catch (e){
-			console.log(e);
-		}
+			} else {
+				alert(`Sign on attempt failed!`);
+			}
+			
+		}).catch(error => {
+			console.log(error);
+		})
 	}
-
 
   return (
     <div className="App">

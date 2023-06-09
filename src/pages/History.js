@@ -14,6 +14,8 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Search from '@mui/icons-material/Search';
 import Delete from '@mui/icons-material/Delete';
+import FormGroup from '@mui/material/FormGroup';
+import Typography from '@mui/material/Typography';
 
 const WebserviceProtocol = config.WebserviceProtocol
 const WebserviceHost = config.WebserviceHost
@@ -21,9 +23,7 @@ const WebservicePort = config.WebservicePort
 
 function TypeFilter(props) {
   return (
-    <div>
-	 
-    <Select  
+    <Select margin="dense"  
 	labelId="typeLabel"
     id="type"
 	label="Type"
@@ -37,35 +37,35 @@ function TypeFilter(props) {
 		<MenuItem value="square_root">Square Root</MenuItem>
 		<MenuItem value="random_string">Random String</MenuItem>
 	</Select>
-    </div>
   )
 }
 
 function DateFilter(props) {
   return (
 	<div> 
-	<TextField label="Start Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.fromDateFilterChange} /> 
-	<TextField label="End Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.untilDateFilterChange} /> 
+	<TextField margin="dense" label="Start Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.fromDateFilterChange} /> 
+	<TextField margin="dense" label="End Date" type="text" placeholder="YYYY-MM-DD" onChange={props.filterEvents.untilDateFilterChange} /> 
 	</div>
   )
 }
 
 function AmountFilter(props) {
   return (
-	<div><TextField type="text" label="Min Amount" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} /><TextField type="text" label="Min Amount" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
+	<div><TextField margin="dense" type="text" label="Min Amount" placeholder="1" onChange={props.filterEvents.minAmountFilterChange} />
+	<TextField margin="dense" type="text" label="Max Amount" placeholder="100" onChange={props.filterEvents.maxAmountFilterChange} /> </div>
   )
 }
 
 
 function SearchButton(props) {
   return (
-	<div> <Button minheight="64px" onClick={() => props.searchFunction(0)} variant="contained" > <Search/> </Button></div>
+	<Button size="medium"  onClick={() => props.searchFunction(0)} variant="contained" > <Search/> </Button>
   )
 }
 
 function SearchBar(props) {
   return (
-	<div className="searchbar"> 
+	<FormGroup> 
 	<Grid container spacing={0} xs={12} > 
 		<TypeFilter filterEvents={props.events} typeFilter={props.typeFilter} /><SearchButton searchFunction={props.searchFunction}/> 
 
@@ -74,7 +74,7 @@ function SearchBar(props) {
 		<DateFilter filterEvents={props.events} /> 
 		<AmountFilter filterEvents={props.events}/> 	
 	</Grid>
-	</div>
+	</FormGroup>
   )
 }
 
@@ -217,7 +217,8 @@ export default function History(props) {
 	}
 	
   return (
-    <div className="historypage">
+    <div>
+	<Typography component="h1" variant="h5"> Search Records </Typography>
 	<SearchBar token={props.userToken} events={filterEvents} searchFunction={trySearch} typeFilter={typeFilter}/>
 	<ResultsData searchResults={searchResults} tryDeleteRecord={tryDeleteRecord} selectPage={trySearch}/>
 	</div>
